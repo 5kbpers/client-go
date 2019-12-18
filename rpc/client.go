@@ -523,6 +523,7 @@ func (c *rpcClient) SendRequest(ctx context.Context, addr string, req *Request, 
 	start := time.Now()
 	reqType := req.Type.String()
 	storeID := strconv.FormatUint(req.Context.GetPeer().GetStoreId(), 10)
+	req.Context.ReplicaRead = true
 	defer func() {
 		metrics.SendReqHistogram.WithLabelValues(reqType, storeID).Observe(time.Since(start).Seconds())
 	}()
