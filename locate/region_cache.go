@@ -105,9 +105,6 @@ func (c *RegionCache) GetRPCContext(bo *retry.Backoffer, id RegionVerID) (*RPCCo
 	meta, peer := region.meta, region.peer
 	c.mu.RUnlock()
 
-	addrs := make([]string, 1)
-	peers := make([]*metapb.Peer, 1)
-	peers[0] = peer
 	leaderAddr, err := c.GetStoreAddr(bo, peer.GetStoreId())
 	if err != nil {
 		return nil, err
@@ -116,6 +113,20 @@ func (c *RegionCache) GetRPCContext(bo *retry.Backoffer, id RegionVerID) (*RPCCo
 		// Store not found, region must be out of date.
 		c.DropRegion(id)
 		return nil, nil
+	}
+	addrs := make([]string, 1)
+	peers := make([]*metapb.Peer, 1)
+	addrs[0] = leaderAddr
+	peers[0] = peer
+	for _, p := range region.meta.Peers {
+		if p.GetId() != peer.GetId() {
+			addr, err := c.GetStoreAddr(bo, p.GetStoreId())
+			if err != nil {
+				return nil, err
+			}
+			addrs = append(addrs, addr)
+			peers = append(peers, p)
+		}
 	}
 	return &RPCContext{
 		Region: id,
