@@ -18,12 +18,12 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/pingcap/kvproto/pkg/errorpb"
-	"github.com/pkg/errors"
-	log "github.com/sirupsen/logrus"
 	"github.com/5kbpers/client-go/locate"
 	"github.com/5kbpers/client-go/metrics"
 	"github.com/5kbpers/client-go/retry"
+	"github.com/pingcap/kvproto/pkg/errorpb"
+	"github.com/pkg/errors"
+	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -135,7 +135,7 @@ func (s *RegionRequestSender) sendReqToRegion(bo *retry.Backoffer, ctx *locate.R
 	peer := ctx.Peer
 	if len(ctx.Addr) > 1 {
 		// 0 <= num < len(ctx.Addr)
-		num := rand.New(rand.NewSource(time.Now().Unix())).Int() % len(ctx.Addr)
+		num := rand.New(rand.NewSource(time.Now().Unix())).Int()%(len(ctx.Addr)-1) + 1
 		addr = ctx.Addr[num]
 		peer = ctx.Peers[num]
 	}
