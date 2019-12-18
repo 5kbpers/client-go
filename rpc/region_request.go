@@ -15,14 +15,15 @@ package rpc
 
 import (
 	"context"
+	"math/rand"
 	"time"
 
 	"github.com/pingcap/kvproto/pkg/errorpb"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
-	"github.com/tikv/client-go/locate"
-	"github.com/tikv/client-go/metrics"
-	"github.com/tikv/client-go/retry"
+	"github.com/5kbpers/client-go/locate"
+	"github.com/5kbpers/client-go/metrics"
+	"github.com/5kbpers/client-go/retry"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -103,7 +104,7 @@ func (s *RegionRequestSender) SendReq(bo *retry.Backoffer, req *Request, regionI
 			return GenRegionErrorResp(req, &errorpb.Error{EpochNotMatch: &errorpb.EpochNotMatch{}})
 		}
 
-		s.storeAddr = ctx.Addr
+		s.storeAddr = ctx.Addr[0]
 		resp, retry, err := s.sendReqToRegion(bo, ctx, req, timeout)
 		if err != nil {
 			return nil, err
@@ -130,10 +131,18 @@ func (s *RegionRequestSender) SendReq(bo *retry.Backoffer, req *Request, regionI
 }
 
 func (s *RegionRequestSender) sendReqToRegion(bo *retry.Backoffer, ctx *locate.RPCContext, req *Request, timeout time.Duration) (resp *Response, retry bool, err error) {
-	if e := SetContext(req, ctx.Meta, ctx.Peer); e != nil {
+	addr := ctx.Addr[0]
+	peer := ctx.Peer
+	if len(ctx.Addr) > 1 {
+		// 0 <= num < len(ctx.Addr)
+		num := rand.New(rand.NewSource(time.Now().Unix())).Int() % len(ctx.Addr)
+		addr = ctx.Addr[num]
+		peer = ctx.Peers[num]
+	}
+	if e := SetContext(req, ctx.Meta, peer); e != nil {
 		return nil, false, err
 	}
-	resp, err = s.client.SendRequest(bo.GetContext(), ctx.Addr, req, timeout)
+	resp, err = s.client.SendRequest(bo.GetContext(), addr, req, timeout)
 	if err != nil {
 		s.rpcError = err
 		if e := s.onSendFail(bo, ctx, err); e != nil {

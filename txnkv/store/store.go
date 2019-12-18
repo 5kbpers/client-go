@@ -23,14 +23,14 @@ import (
 	pd "github.com/pingcap/pd/client"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
-	"github.com/tikv/client-go/config"
-	"github.com/tikv/client-go/locate"
-	"github.com/tikv/client-go/metrics"
-	"github.com/tikv/client-go/retry"
-	"github.com/tikv/client-go/rpc"
-	"github.com/tikv/client-go/txnkv/latch"
-	"github.com/tikv/client-go/txnkv/oracle"
-	"github.com/tikv/client-go/txnkv/oracle/oracles"
+	"github.com/5kbpers/client-go/config"
+	"github.com/5kbpers/client-go/locate"
+	"github.com/5kbpers/client-go/metrics"
+	"github.com/5kbpers/client-go/retry"
+	"github.com/5kbpers/client-go/rpc"
+	"github.com/5kbpers/client-go/txnkv/latch"
+	"github.com/5kbpers/client-go/txnkv/oracle"
+	"github.com/5kbpers/client-go/txnkv/oracle/oracles"
 )
 
 // TiKVStore contains methods to interact with a TiKV cluster.

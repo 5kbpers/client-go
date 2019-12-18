@@ -20,16 +20,16 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/5kbpers/client-go/codec"
+	"github.com/5kbpers/client-go/config"
+	"github.com/5kbpers/client-go/metrics"
+	"github.com/5kbpers/client-go/retry"
 	"github.com/google/btree"
 	"github.com/pingcap/kvproto/pkg/kvrpcpb"
 	"github.com/pingcap/kvproto/pkg/metapb"
 	"github.com/pingcap/pd/client"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
-	"github.com/tikv/client-go/codec"
-	"github.com/tikv/client-go/config"
-	"github.com/tikv/client-go/metrics"
-	"github.com/tikv/client-go/retry"
 )
 
 // CachedRegion encapsulates {Region, TTL}
@@ -77,7 +77,8 @@ type RPCContext struct {
 	Region RegionVerID
 	Meta   *metapb.Region
 	Peer   *metapb.Peer
-	Addr   string
+	Addr   []string
+	Peers  []*metapb.Peer
 }
 
 // GetStoreID returns StoreID.
@@ -104,11 +105,14 @@ func (c *RegionCache) GetRPCContext(bo *retry.Backoffer, id RegionVerID) (*RPCCo
 	meta, peer := region.meta, region.peer
 	c.mu.RUnlock()
 
-	addr, err := c.GetStoreAddr(bo, peer.GetStoreId())
+	addrs := make([]string, 1)
+	peers := make([]*metapb.Peer, 1)
+	peers[0] = peer
+	leaderAddr, err := c.GetStoreAddr(bo, peer.GetStoreId())
 	if err != nil {
 		return nil, err
 	}
-	if addr == "" {
+	if leaderAddr == "" {
 		// Store not found, region must be out of date.
 		c.DropRegion(id)
 		return nil, nil
@@ -117,7 +121,8 @@ func (c *RegionCache) GetRPCContext(bo *retry.Backoffer, id RegionVerID) (*RPCCo
 		Region: id,
 		Meta:   meta,
 		Peer:   peer,
-		Addr:   addr,
+		Addr:   addrs,
+		Peers:  peers,
 	}, nil
 }
 

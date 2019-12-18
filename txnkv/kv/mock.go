@@ -14,7 +14,7 @@
 package kv
 
 import (
-	"github.com/tikv/client-go/key"
+	"github.com/5kbpers/client-go/key"
 )
 
 type mockSnapshot struct {

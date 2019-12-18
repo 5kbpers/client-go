@@ -1,4 +1,4 @@
-module github.com/tikv/client-go
+module github.com/5kbpers/client-go
 
 require (
 	github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc // indirect
@@ -52,3 +52,5 @@ require (
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 )
+
+go 1.13

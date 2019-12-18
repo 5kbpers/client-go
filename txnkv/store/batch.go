@@ -13,7 +13,7 @@
 
 package store
 
-import "github.com/tikv/client-go/locate"
+import "github.com/5kbpers/client-go/locate"
 
 // batchKeys is a batch of keys in the same region.
 type batchKeys struct {

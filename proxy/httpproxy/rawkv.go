@@ -19,8 +19,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/tikv/client-go/config"
-	"github.com/tikv/client-go/proxy"
+	"github.com/5kbpers/client-go/config"
+	"github.com/5kbpers/client-go/proxy"
 )
 
 type rawkvHandler struct {

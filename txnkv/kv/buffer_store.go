@@ -14,8 +14,8 @@
 package kv
 
 import (
-	"github.com/tikv/client-go/config"
-	"github.com/tikv/client-go/key"
+	"github.com/5kbpers/client-go/config"
+	"github.com/5kbpers/client-go/key"
 )
 
 // BufferStore wraps a Retriever for read and a MemBuffer for buffered write.

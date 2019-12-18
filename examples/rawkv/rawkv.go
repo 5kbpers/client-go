@@ -16,8 +16,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/tikv/client-go/config"
-	"github.com/tikv/client-go/rawkv"
+	"github.com/5kbpers/client-go/config"
+	"github.com/5kbpers/client-go/rawkv"
 )
 
 func main() {

@@ -20,9 +20,9 @@ import (
 
 	"github.com/pingcap/pd/client"
 	log "github.com/sirupsen/logrus"
-	"github.com/tikv/client-go/config"
-	"github.com/tikv/client-go/metrics"
-	"github.com/tikv/client-go/txnkv/oracle"
+	"github.com/5kbpers/client-go/config"
+	"github.com/5kbpers/client-go/metrics"
+	"github.com/5kbpers/client-go/txnkv/oracle"
 )
 
 var _ oracle.Oracle = &pdOracle{}

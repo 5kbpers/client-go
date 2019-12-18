@@ -19,8 +19,8 @@ import (
 	"testing"
 
 	. "github.com/pingcap/check"
-	"github.com/tikv/client-go/config"
-	"github.com/tikv/client-go/key"
+	"github.com/5kbpers/client-go/config"
+	"github.com/5kbpers/client-go/key"
 )
 
 func TestT(t *testing.T) {
